@@ -4,14 +4,15 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class JoeSubsystem {
   /** Creates a new JoeSubsystem. */
   String joe = "Who's Joe?";
   String mama = "Joe MAMA!!";
   
-  public JoeSubsystem() {
-  }
+  public JoeSubsystem() {}
+  
 
   /*public void periodic() {
     // This method will be called once per scheduler run 

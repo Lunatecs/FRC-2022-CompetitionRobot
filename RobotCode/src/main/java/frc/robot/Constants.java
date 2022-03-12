@@ -59,6 +59,8 @@ public final class Constants {
 
         public final static int LEFT_TRIGGER = 2;
         public final static int RIGHT_TRIGGER = 3;
+        public final static int LEFT_BUMPER = 5;
+        public final static int RIGHT_BUMPER = 6;
 
         public final static int DRIVER_USB = 0;
 
@@ -67,16 +69,29 @@ public final class Constants {
     }
 
     public final class ClimberConstants{
-        public final static int FORWARD_CHANNEL = 0;
-        public final static int REVERSE_CHANNEL = 1;
+        public final static int FORWARD_CHANNEL_R = 14;
+        public final static int REVERSE_CHANNEL_R = 15;
+        public final static int FORWARD_CHANNEL_L = 10;
+        public final static int REVERSE_CHANNEL_L = 3;
+
         public final static int WINCH_MOTOR_ID = 15; // Left
         public final static int WITCH_MOTOR_ID = 16; // Right
+
+        public final static int LIMIT_SWITCH_PORT = 0; // Right
+        public final static int LIMIT_SWITCH_PORT_1 = 1; // Left
 
     
     } 
 
     public final class IntakeConstants{
-        public final static int FORWARD_MOTOR_ID = 5;
+        public final static int FORWARD_MOTOR_ID = 10;
+        public final static int BACK_MOTOR_ID = -1;
+
+        public final static int FORWARD_CHANNEL = 0;// temporary value
+        public final static int REVERSE_CHANNEL = 1;// temporary value
+
+        public final static int FORWARD_CHANNEL_2 = 2;// temporary value
+        public final static int REVERSE_CHANNEL_2 = 3;// temporary value
     }
 
     public final class TowerConstants{
@@ -84,4 +99,22 @@ public final class Constants {
         public final static int FRONT_TOWER_MOTOR_ID = 6;
         public final static int BACK_TOWER_MOTOR_ID = 14;
     }
+
+    public static final class TurretConstants {
+        public static final int Turret_ID = 19;
+
+        public static final double MinSpeed = 0.05;
+        public static final double ScanSpeed = 0.25;
+        
+        public static final int FwdMaxSensorPostion = 11000;
+        public static final double FwdKp = 0.00015;
+        public static final double FwdKd = 0.0;
+        public static final double FwdKi = 0.0;
+        
+        public static final int BckMaxSensorPostion = -12000;
+        public static final double BckKp = 0.00015;
+        public static final double BckKd = 0.0;
+        public static final double BckKi = 0.0;
+    }
+    
 } 

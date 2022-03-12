@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.ClimbToPosition;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.RamseteCommandFactory;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -77,18 +78,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new POVButton(operatorJoystick, 0).whileHeld(() -> climber.runClimber(-.5))
-                                      .whenReleased(() -> climber.runClimber(0));
-    new POVButton(operatorJoystick, 180).whileHeld(() -> climber.runClimber(.5))
-                                        .whenReleased(() -> climber.runClimber(0));
+    new POVButton(operatorJoystick, 0).whileHeld(new RunCommand(() -> climber.runClimber(-.5),climber))
+                                      .whenReleased(new RunCommand(() -> climber.runClimber(0),climber));
+    new POVButton(operatorJoystick, 180).whileHeld(new RunCommand(() -> climber.runClimber(.5),climber))
+                                        .whenReleased(new RunCommand(() -> climber.runClimber(0),climber));
 
     
     new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).whileHeld(() -> tower.runTower(.5))
                                                                           .whenReleased(() -> tower.runTower(0));
     new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).whileHeld(() -> tower.runTower(-.5))
                                                                           .whenReleased(() -> tower.runTower(0));
+    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).whenPressed(() -> climber.toggleSolenoid());
 
-
+    new JoystickButton(operatorJoystick, JoystickConstants.LEFT_BUMPER).whenPressed(new ClimbToPosition(-156000, climber));
+    new JoystickButton(operatorJoystick, JoystickConstants.RIGHT_BUMPER).whenPressed(new ClimbToPosition(0, climber));
   }
 
   /**

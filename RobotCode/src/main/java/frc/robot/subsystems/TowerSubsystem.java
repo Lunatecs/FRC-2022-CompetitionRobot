@@ -27,7 +27,7 @@ public class TowerSubsystem extends SubsystemBase {
     frontMotor.setNeutralMode(NeutralMode.Brake);
     backMotor.setNeutralMode(NeutralMode.Brake);
     backMotor.follow(frontMotor);
-    backMotor.setInverted(true);
+    backMotor.setInverted(false);
     frontMotor.setInverted(false);
 
   }
