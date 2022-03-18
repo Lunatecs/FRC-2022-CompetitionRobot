@@ -16,22 +16,34 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
 
   private TalonSRX frontMotor = new TalonSRX(IntakeConstants.FORWARD_MOTOR_ID);
-  //commented out because it doesn't do anything right now anyway
-  //private TalonSRX backMotor = new TalonSRX(IntakeConstants.BACK_MOTOR_ID);
-
-  // I don't quite know if I am doing this right.
-  //private DoubleSolenoid frontIntake = new DoubleSolenoid(PneumaticsModuleType.REVPH, IntakeConstants.FORWARD_CHANNEL, IntakeConstants.REVERSE_CHANNEL);
-  //private DoubleSolenoid backIntake = new DoubleSolenoid(PneumaticsModuleType.REVPH, IntakeConstants.FORWARD_CHANNEL_2, IntakeConstants.REVERSE_CHANNEL_2);
+  private TalonSRX backMotor = new TalonSRX(IntakeConstants.BACK_MOTOR_ID);
   
+  private final DoubleSolenoid frontIntake = new DoubleSolenoid(
+    PneumaticsModuleType.REVPH, 
+    IntakeConstants.FORWARD_CHANNEL_F, 
+    IntakeConstants.REVERSE_CHANNEL_F);
+
+    private final DoubleSolenoid backIntake = new DoubleSolenoid(
+      PneumaticsModuleType.REVPH, 
+      IntakeConstants.FORWARD_CHANNEL_B, 
+      IntakeConstants.REVERSE_CHANNEL_B);
+
+  //commented out because it doesn't do anything right now anyway
+  
+ 
   /** Creates a new IntakeSubsystem. */
 
   public IntakeSubsystem() {
 
     frontMotor.configFactoryDefault();
-    //backMotor.configFactoryDefault();
+    backMotor.configFactoryDefault();
 
-    //backMotor.setNeutralMode(NeutralMode.Brake);
+    backMotor.setNeutralMode(NeutralMode.Brake);
     frontMotor.setNeutralMode(NeutralMode.Brake);
+
+    // PLACEHOLDER VALUES FIX THIS BEFORE COMPETITION!!!
+    frontIntake.set(DoubleSolenoid.Value.kForward);
+    backIntake.set(DoubleSolenoid.Value.kForward);
   }
 
 
@@ -40,12 +52,16 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void toggleIntake() {
-    //frontIntake.toggle();
-    //backIntake.toggle();
+  public void toggleFrontIntake() {
+    frontIntake.toggle();
+  }
+
+  public void toggleBackIntake() {
+    backIntake.toggle();
   }
 
   public void runIntake(double speed) {
     frontMotor.set(ControlMode.PercentOutput, speed);
+    backMotor.set(ControlMode.PercentOutput, speed);
   }
 }

@@ -39,15 +39,16 @@ import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new ClimberSubsystem. */
-  private final DoubleSolenoid climberSolenoidRight = new DoubleSolenoid(
+  
+  private final DoubleSolenoid armsSolenoid = new DoubleSolenoid(
     PneumaticsModuleType.REVPH,
-    ClimberConstants.FORWARD_CHANNEL_R, 
-    ClimberConstants.REVERSE_CHANNEL_R);
-
-  private final DoubleSolenoid climberSolenoidLeft = new DoubleSolenoid(
+    ClimberConstants.FORWARD_CHANNEL_ARMS, 
+    ClimberConstants.REVERSE_CHANNEL_ARMS);
+  
+  private final DoubleSolenoid climberSolenoid = new DoubleSolenoid(
     PneumaticsModuleType.REVPH,
-    ClimberConstants.FORWARD_CHANNEL_L, 
-    ClimberConstants.REVERSE_CHANNEL_L);
+    ClimberConstants.FORWARD_CHANNEL_CLIMBER, 
+    ClimberConstants.REVERSE_CHANNEL_CLIMBER);
   
   private final TalonFX leftWinchMotor = new TalonFX(ClimberConstants.WINCH_MOTOR_ID);
   private final TalonFX rightWinchMotor = new TalonFX(ClimberConstants.WITCH_MOTOR_ID);
@@ -70,8 +71,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
     //rightWinchMotor.follow(leftWinchMotor);
 
-    climberSolenoidLeft.set(DoubleSolenoid.Value.kForward);
-    //climberSolenoidRight.set(DoubleSolenoid.Value.kForward);
+    climberSolenoid.set(DoubleSolenoid.Value.kForward);
+    armsSolenoid.set(DoubleSolenoid.Value.kForward);
 
   }
 
@@ -134,7 +135,12 @@ public class ClimberSubsystem extends SubsystemBase {
 
   public void toggleSolenoid() {
     //this.climberSolenoidRight.toggle();
-    this.climberSolenoidLeft.toggle();
+    this.climberSolenoid.toggle();
 
   }
+
+  public void toggleArms() {
+    this.armsSolenoid.toggle();
+  }
+
 }

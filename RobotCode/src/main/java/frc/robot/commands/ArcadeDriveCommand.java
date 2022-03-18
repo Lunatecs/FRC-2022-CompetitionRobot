@@ -33,6 +33,7 @@ public class ArcadeDriveCommand extends CommandBase {
   @Override
   public void execute() {
     SmartDashboard.putNumber("rotation", rotationSupplier.getAsDouble());
+    SmartDashboard.putNumber("speed", speedSupplier.getAsDouble());
     drivetrain.arcadeDrive(speedSupplier.getAsDouble(), rotationSupplier.getAsDouble());
   }
 

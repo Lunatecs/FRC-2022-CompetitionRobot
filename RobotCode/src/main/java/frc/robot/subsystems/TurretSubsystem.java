@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TurretConstants;
@@ -19,60 +20,35 @@ public class TurretSubsystem extends SubsystemBase {
   private NeutralMode TURRET_NEUTRALMODE = NeutralMode.Brake;
   private PIDController pidControllerFwd;
   private PIDController pidControllerBck;
-  private PIDController pidControllerLock;
-  private boolean lock = false;
+  private DigitalInput limitSwitch = new DigitalInput(TurretConstants.LIMIT_SWITCH_PORT_2);
   
   public TurretSubsystem() {
     turret.configFactoryDefault();
     turret.setNeutralMode(TURRET_NEUTRALMODE);
-    //resetPosition();
+    resetPosition();
     pidControllerFwd = new PIDController(TurretConstants.FwdKp,TurretConstants.FwdKi,TurretConstants.FwdKd);
     pidControllerFwd.setSetpoint(TurretConstants.FwdMaxSensorPostion);
     pidControllerBck = new PIDController(TurretConstants.BckKp,TurretConstants.BckKi,TurretConstants.BckKd);
     pidControllerBck.setSetpoint(TurretConstants.BckMaxSensorPostion);
     turret.setSensorPhase(true);
-    this.pidControllerLock = new PIDController(0.0, 0.0, .9);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Turret Encoder", getPosition());
-
-    if(lock) {
-      this.setTurretSpeed(pidControllerLock.calculate(this.getPosition()), true);
-    }
-
+    SmartDashboard.putBoolean("Turret limit switch", getLimitSwitch());
     super.periodic();
   }
 
-  public void turn(double speed, boolean ignoreMin) {
-    double position = getPosition(); 
-    double speedLimitFwd = pidControllerFwd.calculate(position);
-    double speedLimitBck = pidControllerBck.calculate(position);
-    //SmartDashboard.putNumber("speedLimitFwd", speedLimitFwd);
-    //SmartDashboard.putNumber("speedLimitBck", speedLimitBck);
-    
-    if(speed > speedLimitFwd && speed > 0) {
-      speed = speedLimitFwd;
-    } else if(speed < speedLimitBck && speed <= 0) {
-      speed = speedLimitBck;
-    }
-    if (!(speed == 0) && Math.abs(speed) < TurretConstants.MinSpeed && !ignoreMin) {
-      if(speed < 0) {
-        speed = -TurretConstants.MinSpeed;
-      } else if(speed > 0) {
-        speed = TurretConstants.MinSpeed;
-      }
-    }
-  }
+
 
   public void setTurretSpeed(double speed, boolean ignoreMin) {
     double position = getPosition(); 
     double speedLimitFwd = pidControllerFwd.calculate(position);
     double speedLimitBck = pidControllerBck.calculate(position);
-    //SmartDashboard.putNumber("speedLimitFwd", speedLimitFwd);
-    //SmartDashboard.putNumber("speedLimitBck", speedLimitBck);
+    SmartDashboard.putNumber("speedLimitFwd", speedLimitFwd);
+    SmartDashboard.putNumber("speedLimitBck", speedLimitBck);
     
     if(speed > speedLimitFwd && speed > 0) {
       speed = speedLimitFwd;
@@ -86,7 +62,7 @@ public class TurretSubsystem extends SubsystemBase {
         speed = TurretConstants.MinSpeed;
       }
     }
-    //SmartDashboard.putNumber("actualSpeed", speed);
+    SmartDashboard.putNumber("actualSpeed", speed);
     turret.set(ControlMode.PercentOutput, speed);
   }
 
@@ -99,22 +75,27 @@ public class TurretSubsystem extends SubsystemBase {
     turret.setSelectedSensorPosition(0, 0, 10);
   }
 
+  public boolean getLimitSwitch() {
+    return !limitSwitch.get();
+  }
+
   public boolean isFwdLimit() {
-    return turret.getSensorCollection().isFwdLimitSwitchClosed();
-    // if(getPosition() >= TurretConstants.FwdMaxSensorPostion) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+    if (TurretConstants.FwdMaxSensorPostion-5000 <= getPosition()) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   public boolean isRevLimit() {
-    return turret.getSensorCollection().isRevLimitSwitchClosed();
-    // if(getPosition() <= TurretConstants.BckMaxSensorPostion) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+    if (TurretConstants.BckMaxSensorPostion+5000 >= getPosition()) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
+    
 
 }
