@@ -9,14 +9,18 @@ import java.sql.Driver;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.buttons.TriggerButton;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.AutoAimCommand;
+import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.ClimbToPosition;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ManualTurret;
+import frc.robot.commands.OneBallAutoCommand;
 import frc.robot.commands.RamseteCommandFactory;
 import frc.robot.commands.ZeroTurretCommand;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -36,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.ScanForTargetCommand;
+import frc.robot.commands.TwoBallAutoCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -57,11 +62,22 @@ public class RobotContainer {
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);
   private final Joystick operatorJoystick = new Joystick(Constants.JoystickConstants.OPERATOR_USB);
 
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
     configureDefaultCommands();
+    configureAutos();
+  }
+
+  public void configureAutos() {
+    autoChooser.addOption("2 Ball Auto", new TwoBallAutoCommand(intake, drivetrainSubsystem, turret, tower, shooter, stopper, limelight));
+    autoChooser.addOption("Move", new AutoMoveCommand(drivetrainSubsystem, 1.5));
+    autoChooser.addOption("1 Ball Auto", new OneBallAutoCommand(intake, drivetrainSubsystem, turret, tower, shooter, stopper, limelight));
+    autoChooser.addOption("Do Nothing", new InstantCommand());
+    //SmartDashboard.putData(autoChooserx);
   }
 
   public void configureDefaultCommands() {
@@ -72,7 +88,8 @@ public class RobotContainer {
     */
     drivetrainSubsystem.setDefaultCommand(new ArcadeDriveCommand(drivetrainSubsystem,
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_Y_AXIS);}, 
-    () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}));
+    () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);},
+    () -> {return driverJoystick.getRawButton(JoystickConstants.YELLOW_BUTTON);}));
     /*
     intake.setDefaultCommand(new RunCommand( () -> {
       if (driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_TRIGGER) > 0){
@@ -125,22 +142,35 @@ public class RobotContainer {
     We could potentially replace the operator control over the tower intake and outtake by instead having the tower
     bound to the intake.
     */
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).whileHeld(new RunCommand(() -> climber.runClimber(-.5), climber))
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).whileHeld(new RunCommand(() -> climber.runClimber(1), climber))
                                                                           .whenReleased(new   RunCommand(() -> climber.runClimber(0), climber));  
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).whileHeld(new RunCommand(() -> climber.runClimber(.5), climber))
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).whileHeld(new RunCommand(() -> climber.runClimber(-.5), climber))
                                                                           .whenReleased(new   RunCommand(() -> climber.runClimber(0), climber));                      
 
-    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).whenPressed(() -> climber.toggleSolenoid());
+    new TriggerButton(() -> operatorJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)).and(new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON)).whenActive(() -> climber.toggleSolenoid());
 
-    new JoystickButton(operatorJoystick, JoystickConstants.LEFT_BUMPER).whenPressed(new ClimbToPosition(-156000, climber));
+    new JoystickButton(operatorJoystick, JoystickConstants.LEFT_BUMPER).whenPressed(new ClimbToPosition(230000, climber));
     //new JoystickButton(operatorJoystick, JoystickConstants.RIGHT_BUMPER).whenPressed(new ClimbToPosition(0, climber));
 
     new TriggerButton(() -> operatorJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)).whileActiveContinuous(new ManualTurret(() -> operatorJoystick.getRawAxis(JoystickConstants.LEFT_X_AXIS), turret));
     
     new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).whenPressed(new ScanForTargetCommand(turret, limelight));
 
-    new JoystickButton(operatorJoystick,JoystickConstants.RIGHT_BUMPER).whenPressed(() -> stopper.toggleStopper());
+    new JoystickButton(operatorJoystick,JoystickConstants.RIGHT_BUMPER).whenPressed(() -> stopper.stopperIn()).whenReleased(() -> stopper.stopperOut());
 
+    new JoystickButton(driverJoystick, JoystickConstants.GREEN_BUTTON).whenPressed( new RunCommand(
+          () -> {
+            intake.runIntake(.3);
+            tower.runTower(-1.0);
+          },
+          intake, tower
+        ), true).whenReleased(new InstantCommand(
+          () -> {
+            intake.runIntake(0);
+            tower.runTower(0);
+          },
+          intake, tower
+        ), true);
 
     new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).whenPressed(() -> intake.toggleFrontIntake());
     new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).whenPressed(() -> intake.toggleBackIntake());
@@ -149,7 +179,7 @@ public class RobotContainer {
     
     new TriggerButton(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)).whenActive(new RunCommand(
       () -> {
-        intake.runIntake(driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_TRIGGER)*0.75);
+        intake.runIntake(driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_TRIGGER));
         tower.runTower(-1.0);
       },
       intake, tower
@@ -162,7 +192,7 @@ public class RobotContainer {
     ), true);
     new TriggerButton(() -> driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)).whenActive(new RunCommand(
       () -> {
-        intake.runIntake(-driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_TRIGGER)*0.75);
+        intake.runIntake(-driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_TRIGGER));
         tower.runTower(1.0);
       },
       intake, tower
@@ -182,6 +212,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return RamseteCommandFactory.getRamseteCommand(drivetrainSubsystem);
+    //return new AutoMoveCommand(drivetrainSubsystem, -1.5);
+    //return new OneBallAutoCommand(intake, drivetrainSubsystem, turret, tower, shooter, stopper, limelight);
+    return new TwoBallAutoCommand(intake, drivetrainSubsystem, turret, tower, shooter, stopper, limelight);
+   
+    //return autoChooser.getSelected();
+    //return RamseteCommandFactory.getRamseteCommand(drivetrainSubsystem);
   }
 }
