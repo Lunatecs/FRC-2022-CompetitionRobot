@@ -49,7 +49,7 @@ public boolean isValidTarget() {
 
 public boolean isOnTarget() {
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  return this.isValidTarget() && Math.abs(this.getTX()) <=1;
+  return this.isValidTarget() && Math.abs(this.getTX()) <=1.5;
 }
 
 public void setCamMode (double value) {

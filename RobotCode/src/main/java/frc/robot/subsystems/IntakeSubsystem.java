@@ -17,7 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private TalonSRX frontMotor = new TalonSRX(IntakeConstants.FORWARD_MOTOR_ID);
   private TalonSRX backMotor = new TalonSRX(IntakeConstants.BACK_MOTOR_ID);
-  
+
   private final DoubleSolenoid frontIntake = new DoubleSolenoid(
     PneumaticsModuleType.REVPH, 
     IntakeConstants.FORWARD_CHANNEL_F, 
@@ -42,8 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
     frontMotor.setNeutralMode(NeutralMode.Brake);
 
     // PLACEHOLDER VALUES FIX THIS BEFORE COMPETITION!!!
-    frontIntake.set(DoubleSolenoid.Value.kForward);
-    backIntake.set(DoubleSolenoid.Value.kForward);
+    frontIntake.set(DoubleSolenoid.Value.kReverse);
+    backIntake.set(DoubleSolenoid.Value.kReverse);
   }
 
 
@@ -63,5 +63,9 @@ public class IntakeSubsystem extends SubsystemBase {
   public void runIntake(double speed) {
     frontMotor.set(ControlMode.PercentOutput, speed);
     backMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void intakeOut() {
+    frontIntake.set(DoubleSolenoid.Value.kForward);
   }
 }

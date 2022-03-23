@@ -71,11 +71,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   }
   public double getLeftDistance() {
-    return (leftFront.getSelectedSensorPosition() * DrivetrainConstants.METERS_PER_TICK * 10);
+    return (leftFront.getSelectedSensorPosition() * DrivetrainConstants.METERS_PER_TICK);
   }
 
   public double getRightDistance() {
-    return (rightFront.getSelectedSensorPosition() * DrivetrainConstants.METERS_PER_TICK * 10);
+    return (rightFront.getSelectedSensorPosition() * DrivetrainConstants.METERS_PER_TICK);
   }
 
   public Pose2d getPose() {
@@ -94,6 +94,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getRightSpeed() {
     return rightFront.getSelectedSensorVelocity() * DrivetrainConstants.METERS_PER_TICK * 10;
+  }
+
+  public void resetEncoders() {
+    rightFront.setSelectedSensorPosition(0.0);
+    leftFront.setSelectedSensorPosition(0.0);
   }
 
 }

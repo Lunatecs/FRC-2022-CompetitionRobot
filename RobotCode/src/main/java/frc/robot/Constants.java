@@ -18,7 +18,7 @@ public final class Constants {
     public final static class DrivetrainConstants{
         public final static int LEFT_FRONT = 3;
         public final static int LEFT_BACK = 4;
-        public final static int RIGHT_FRONT = 1;
+        public final static int RIGHT_FRONT = 1;//Right motors replaced
         public final static int RIGHT_BACK = 2;
 
         public final static int PIGEON = 5;
@@ -91,7 +91,7 @@ public final class Constants {
 
     public final class IntakeConstants{
         public final static int FORWARD_MOTOR_ID = 10;
-        public final static int BACK_MOTOR_ID = -1;
+        public final static int BACK_MOTOR_ID = 5;
 
         public final static int FORWARD_CHANNEL_F = 6;
         public final static int REVERSE_CHANNEL_F = 12;
@@ -112,12 +112,12 @@ public final class Constants {
         public static final double MinSpeed = 0.05;
         public static final double ScanSpeed = 0.25;
         
-        public static final int FwdMaxSensorPostion = 17000;
+        public static final int FwdMaxSensorPostion = 7500;//17000;
         public static final double FwdKp = 0.00015;
         public static final double FwdKd = 0.0;
         public static final double FwdKi = 0.0;
         
-        public static final int BckMaxSensorPostion = -17000;
+        public static final int BckMaxSensorPostion = -7500;//-17000;
         public static final double BckKp = 0.00015;
         public static final double BckKd = 0.0;
         public static final double BckKi = 0.0;

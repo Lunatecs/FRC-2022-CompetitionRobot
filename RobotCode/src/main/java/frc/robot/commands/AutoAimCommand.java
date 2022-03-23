@@ -21,15 +21,13 @@ public class AutoAimCommand extends CommandBase {
   double scanSpeed = 0.2;
   long start = 0;
   /** Creates a new AutoAimCommand. */
-  public AutoAimCommand(TurretSubsystem turret, LimelightSubsystem limelight, boolean rightScan) {
+  public AutoAimCommand(TurretSubsystem turret, LimelightSubsystem limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.turret = turret;
     this.limelight = limelight;
     this.pidController.setSetpoint(0);
+    this.pidController.setTolerance(.3);
     addRequirements(turret);
-    if (rightScan) {
-      scanSpeed = -0.2;
-    }
 
   }
 
@@ -46,9 +44,7 @@ public class AutoAimCommand extends CommandBase {
     if (limelight.isValidTarget()) {
       turret.setTurretSpeed(this.pidController.calculate(limelight.getTX()), true);
     }
-    else {
-      turret.setTurretSpeed(scanSpeed, true);
-    }
+   
   }
 
   // Called once the command ends or is interrupted.

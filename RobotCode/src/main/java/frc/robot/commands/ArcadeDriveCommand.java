@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,14 +16,16 @@ public class ArcadeDriveCommand extends CommandBase {
   DrivetrainSubsystem drivetrain;
   DoubleSupplier speedSupplier;
   DoubleSupplier rotationSupplier;
+  BooleanSupplier slow;
 
     /** Creates a new ArcadeDriveCommand. */
-  public ArcadeDriveCommand(DrivetrainSubsystem drivetrain, DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier) {
+  public ArcadeDriveCommand(DrivetrainSubsystem drivetrain, DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier slow) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
     this.drivetrain = drivetrain;
     this.speedSupplier = speedSupplier;
     this.rotationSupplier = rotationSupplier;
+    this.slow = slow;
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +37,11 @@ public class ArcadeDriveCommand extends CommandBase {
   public void execute() {
     SmartDashboard.putNumber("rotation", rotationSupplier.getAsDouble());
     SmartDashboard.putNumber("speed", speedSupplier.getAsDouble());
-    drivetrain.arcadeDrive(speedSupplier.getAsDouble(), rotationSupplier.getAsDouble());
+    double speedMulti = 1.0;
+    if(slow.getAsBoolean()) {
+      speedMulti=.6;
+    }
+    drivetrain.arcadeDrive(speedSupplier.getAsDouble()*speedMulti, rotationSupplier.getAsDouble()*speedMulti);
   }
 
   // Called once the command ends or is interrupted.

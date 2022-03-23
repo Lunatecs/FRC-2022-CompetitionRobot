@@ -91,7 +91,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void runClimberLeft(double speed) {
-    if(speed < 0) {
+    if(speed > 0) {
       leftWinchMotor.set(ControlMode.PercentOutput, speed);
     } else {
       if (!leftLimitSwitch.get()) {
@@ -104,7 +104,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void runClimberRight(double speed) {
-    if(speed < 0) {
+    if(speed > 0) {
       rightWinchMotor.set(ControlMode.PercentOutput, speed);
     } else {
       if (!rightLimitSwitch.get()) {

@@ -27,6 +27,14 @@ public class StopperSubsystem extends SubsystemBase {
     this.stopperSolenoid.toggle();
   }
 
+  public void stopperOut() {
+    this.stopperSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void stopperIn() {
+    this.stopperSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
