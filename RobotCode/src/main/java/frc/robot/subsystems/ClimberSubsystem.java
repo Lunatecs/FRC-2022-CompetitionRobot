@@ -71,17 +71,17 @@ public class ClimberSubsystem extends SubsystemBase {
 
     //rightWinchMotor.follow(leftWinchMotor);
 
-    climberSolenoid.set(DoubleSolenoid.Value.kForward);
+    climberSolenoid.set(DoubleSolenoid.Value.kReverse);
     armsSolenoid.set(DoubleSolenoid.Value.kForward);
 
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Right Limit Triggered", rightLimitSwitch.get());
-    SmartDashboard.putBoolean("Left Limit Triggered", leftLimitSwitch.get());
-    SmartDashboard.putNumber("Left Encoder", leftWinchMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Right Encoder", rightWinchMotor.getSelectedSensorPosition());
+    //SmartDashboard.putBoolean("Right Limit Triggered", rightLimitSwitch.get());
+    //SmartDashboard.putBoolean("Left Limit Triggered", leftLimitSwitch.get());
+    //SmartDashboard.putNumber("Left Encoder", leftWinchMotor.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("Right Encoder", rightWinchMotor.getSelectedSensorPosition());
     // This method will be called once per scheduler run
   }
 
@@ -137,6 +137,10 @@ public class ClimberSubsystem extends SubsystemBase {
     //this.climberSolenoidRight.toggle();
     this.climberSolenoid.toggle();
 
+  }
+
+  public void climberForward() {
+    this.climberSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
   public void toggleArms() {

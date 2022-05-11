@@ -43,7 +43,17 @@ public class AutoAimCommand extends CommandBase {
   public void execute() {
     if (limelight.isValidTarget()) {
       turret.setTurretSpeed(this.pidController.calculate(limelight.getTX()), true);
+    } else {
+      if (turret.isFwdLimit()) {
+        scanSpeed = -0.2;
+
+      }
+      else if (turret.isRevLimit()) {
+        scanSpeed = 0.2;
+      }
+      turret.setTurretSpeed(scanSpeed, true);
     }
+  
    
   }
 

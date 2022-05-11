@@ -48,10 +48,14 @@ public class ShooterSubsystem extends SubsystemBase {
     if(velocity==0.0) {
       shooterLeader.config_kP(0, 0);
     } else {
-      shooterLeader.config_kF(0, .07);
-      shooterLeader.config_kP(0, .2);
+      shooterLeader.config_kF(0, .055);
+      shooterLeader.config_kP(0, .25);
     }
     shooterLeader.set(ControlMode.Velocity, velocity);
   }
+
+  public double getShooterVelocity() {
+    return shooterLeader.getSelectedSensorVelocity();
+  }  
 
 }

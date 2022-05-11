@@ -12,13 +12,14 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoMoveCommand extends PIDCommand {
+public class AutoStraightMoveCommand extends PIDCommand {
   /** Creates a new AutoMoveCommand. */
 
   DrivetrainSubsystem drive;
+  PIDController anglePID;
+  double angle;
 
-
-  public AutoMoveCommand(DrivetrainSubsystem drive, double meters) {
+  public AutoStraightMoveCommand(DrivetrainSubsystem drive, double meters, double angle, PIDController anglePID) {
     super(
         // The controller that the command will use
         new PIDController(5, 0, 0),
@@ -32,17 +33,21 @@ public class AutoMoveCommand extends PIDCommand {
           if(Math.abs(output)>.65) {
             output = output/Math.abs(output) * .65;
           }
-          drive.arcadeDrive(output, 0);
+          double rot = anglePID.calculate(drive.getAngle());
+          drive.arcadeDrive(output, rot);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     this.drive = drive;
+    this.anglePID = anglePID;
+    this.angle = angle;
+
     getController().setTolerance(.05);
     addRequirements(drive);
     drive.resetEncoders();
   }
 
-  public AutoMoveCommand(DrivetrainSubsystem drive, double meters, double maxSpeed) {
+  public AutoStraightMoveCommand(DrivetrainSubsystem drive, double meters, double angle, PIDController anglePID, double maxSpeed) {
     super(
         // The controller that the command will use
         new PIDController(5, 0, 0),
@@ -56,16 +61,26 @@ public class AutoMoveCommand extends PIDCommand {
           if(Math.abs(output)>maxSpeed) {
             output = output/Math.abs(output) * maxSpeed;
           }
-          drive.arcadeDrive(output, 0);
+          double rot = anglePID.calculate(drive.getAngle());
+          drive.arcadeDrive(output, rot);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     this.drive = drive;
+    this.anglePID = anglePID;
+    this.angle = angle;
+
     getController().setTolerance(.05);
     addRequirements(drive);
     drive.resetEncoders();
   }
 
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    this.anglePID.setSetpoint(drive.getAngle());
+  }
 
   // Returns true when the command should end.
   @Override

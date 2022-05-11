@@ -35,7 +35,7 @@ public class LimelightSubsystem extends SubsystemBase {
 public boolean isValidTarget() {
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   double check = table.getEntry("tv").getDouble(0.0);
-  SmartDashboard.putNumber("Valid Target", check);
+  //SmartDashboard.putNumber("Valid Target", check);
   if (check == 1.0) {
     return true;
   }
@@ -75,6 +75,14 @@ public void setPipeline (double value) {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("isOnTarget", isOnTarget());
+    //SmartDashboard.putBoolean("isOnTarget", isOnTarget());
+    LEDSubsystem ledSubsystem = LEDSubsystem.instanceOf();
+    if(ledSubsystem!=null) {
+      if(isOnTarget()) {
+        ledSubsystem.addColor(ledSubsystem.ON_TARGET);
+      } else {
+        ledSubsystem.removeColor(ledSubsystem.ON_TARGET);
+      }
+    }
   }
 }

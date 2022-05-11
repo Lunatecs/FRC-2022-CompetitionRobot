@@ -46,18 +46,18 @@ public class ScanForTargetCommand extends CommandBase {
   @Override
   public void execute() {
     double speed = 0.0;
-    SmartDashboard.putNumber("TX",limelight.getTX());
+    //SmartDashboard.putNumber("TX",limelight.getTX());
     if (limelight.isValidTarget()) {
       speed = pController.calculate(limelight.getTX(), 0);
       turret.setTurretSpeed(speed, true);
     }
     else {
       if (turret.isFwdLimit()) {
-        scanSpeed = -0.4;
+        scanSpeed = -0.3;
 
       }
       else if (turret.isRevLimit()) {
-        scanSpeed = 0.4;
+        scanSpeed = 0.3;
       }
       turret.setTurretSpeed(scanSpeed, true);
     }

@@ -64,8 +64,8 @@ public class ClimbToPosition extends CommandBase {
     climberSubsystem.runClimberLeft(leftSpeed);
     climberSubsystem.runClimberRight(rightSpeed);
 
-    SmartDashboard.putNumber("Left Speed", leftSpeed);
-    SmartDashboard.putNumber("Right Speed", rightSpeed);
+    //SmartDashboard.putNumber("Left Speed", leftSpeed);
+    //SmartDashboard.putNumber("Right Speed", rightSpeed);
   }
 
   // Called once the command ends or is interrupted.

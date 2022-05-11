@@ -37,7 +37,7 @@ public class TurretSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Turret Encoder", getPosition());
-    SmartDashboard.putBoolean("Turret limit switch", getLimitSwitch());
+    //SmartDashboard.putBoolean("Turret limit switch", getLimitSwitch());
     super.periodic();
   }
 
@@ -47,8 +47,8 @@ public class TurretSubsystem extends SubsystemBase {
     double position = getPosition(); 
     double speedLimitFwd = pidControllerFwd.calculate(position);
     double speedLimitBck = pidControllerBck.calculate(position);
-    SmartDashboard.putNumber("speedLimitFwd", speedLimitFwd);
-    SmartDashboard.putNumber("speedLimitBck", speedLimitBck);
+    //SmartDashboard.putNumber("speedLimitFwd", speedLimitFwd);
+    //SmartDashboard.putNumber("speedLimitBck", speedLimitBck);
     
     if(speed > speedLimitFwd && speed > 0) {
       speed = speedLimitFwd;
@@ -62,7 +62,7 @@ public class TurretSubsystem extends SubsystemBase {
         speed = TurretConstants.MinSpeed;
       }
     }
-    SmartDashboard.putNumber("actualSpeed", speed);
+    //SmartDashboard.putNumber("actualSpeed", speed);
     turret.set(ControlMode.PercentOutput, speed);
   }
 
@@ -80,7 +80,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public boolean isFwdLimit() {
-    if (TurretConstants.FwdMaxSensorPostion-1500 <= getPosition()) {
+    if (TurretConstants.FwdMaxSensorPostion-500 <= getPosition()) {
       return true;
     }
     else {
@@ -89,7 +89,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public boolean isRevLimit() {
-    if (TurretConstants.BckMaxSensorPostion+1500 >= getPosition()) {
+    if (TurretConstants.BckMaxSensorPostion+500 >= getPosition()) {
       return true;
     }
     else {

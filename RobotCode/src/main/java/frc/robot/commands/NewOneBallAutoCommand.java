@@ -20,7 +20,7 @@ import frc.robot.subsystems.TurretSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TwoBallAutoCommand extends SequentialCommandGroup {
+public class NewOneBallAutoCommand extends SequentialCommandGroup {
 
   IntakeSubsystem intake;
   DrivetrainSubsystem drive;
@@ -31,7 +31,7 @@ public class TwoBallAutoCommand extends SequentialCommandGroup {
   LimelightSubsystem limelight;
 
   /** Creates a new AutoCommand. */
-  public TwoBallAutoCommand(IntakeSubsystem intake, DrivetrainSubsystem drive, TurretSubsystem turret, TowerSubsystem tower,
+  public NewOneBallAutoCommand(IntakeSubsystem intake, DrivetrainSubsystem drive, TurretSubsystem turret, TowerSubsystem tower,
                       ShooterSubsystem shooter, StopperSubsystem stopper, LimelightSubsystem limelight, ClimberSubsystem climber) {
     this.intake = intake;
     this.drive = drive;
@@ -51,10 +51,11 @@ public class TwoBallAutoCommand extends SequentialCommandGroup {
     //RELEASE STOPPER
     //STOP EVERYTHING
 
-    addCommands(new InstantCommand(() -> intake.intakeOut()),
+    addCommands(//new InstantCommand(() -> intake.intakeOut()),
+                new WaitCommand(5),
                 new InstantCommand(() ->  climber.climberForward()),
                 new InstantCommand(() -> {
-                  intake.runIntake(1.0);
+                  //intake.runIntake(1.0);
                   tower.runTower(-.8);
                 }),
                 new InstantCommand(() -> {

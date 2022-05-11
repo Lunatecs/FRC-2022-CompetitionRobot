@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -27,7 +28,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private WPI_TalonFX rightBack = new WPI_TalonFX(Constants.DrivetrainConstants.RIGHT_BACK);
 
   private Gyro gyro = new WPI_PigeonIMU(new TalonSRX(Constants.DrivetrainConstants.PIGEON));
-  private DifferentialDrive drive = new DifferentialDrive(leftFront, rightFront);
+  private DifferentialDrive drive;// = new DifferentialDrive(leftFront, rightFront);
   private DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
 
   public DrivetrainSubsystem() {
@@ -67,7 +68,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+    //odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+    SmartDashboard.putNumber("Gyro", this.getAngle());
 
   }
   public double getLeftDistance() {
@@ -94,6 +96,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getRightSpeed() {
     return rightFront.getSelectedSensorVelocity() * DrivetrainConstants.METERS_PER_TICK * 10;
+  }
+
+  public double getAngle() {
+    return this.gyro.getAngle();
   }
 
   public void resetEncoders() {

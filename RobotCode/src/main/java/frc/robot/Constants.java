@@ -1,6 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+/* */
 
 package frc.robot;
 
@@ -112,12 +113,12 @@ public final class Constants {
         public static final double MinSpeed = 0.05;
         public static final double ScanSpeed = 0.25;
         
-        public static final int FwdMaxSensorPostion = 7500;//17000;
+        public static final int FwdMaxSensorPostion = 9500;//7500;//17000;
         public static final double FwdKp = 0.00015;
         public static final double FwdKd = 0.0;
         public static final double FwdKi = 0.0;
         
-        public static final int BckMaxSensorPostion = -7500;//-17000;
+        public static final int BckMaxSensorPostion = -9500;//-7500;//-17000;
         public static final double BckKp = 0.00015;
         public static final double BckKd = 0.0;
         public static final double BckKi = 0.0;
@@ -129,6 +130,7 @@ public final class Constants {
         public static final int SHOOTER_LEADER = 17;
         public static final int SHOOTER_FOLLOWER = 20;
 
+        public static final int IDLE_SPEED = 5800;
     }
 
     public static final class TrackingConstants {
@@ -146,4 +148,11 @@ public final class Constants {
         public final static int FORWARD_CHANNEL = 4;
         public final static int REVERSE_CHANNEL = 9;
     }
+
+    public static final class BallSensorConstants {
+        public final static int TOP_SENSOR = 9;
+        public final static int BOTTOM_SENSOR = 7;
+    }
+
 } 
+

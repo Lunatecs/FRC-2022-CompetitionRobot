@@ -17,15 +17,17 @@ public class ArcadeDriveCommand extends CommandBase {
   DoubleSupplier speedSupplier;
   DoubleSupplier rotationSupplier;
   BooleanSupplier slow;
+  BooleanSupplier reverse;
 
     /** Creates a new ArcadeDriveCommand. */
-  public ArcadeDriveCommand(DrivetrainSubsystem drivetrain, DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier slow) {
+  public ArcadeDriveCommand(DrivetrainSubsystem drivetrain, DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier slow, BooleanSupplier reverse) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
     this.drivetrain = drivetrain;
     this.speedSupplier = speedSupplier;
     this.rotationSupplier = rotationSupplier;
     this.slow = slow;
+    this.reverse =  reverse;
   }
 
   // Called when the command is initially scheduled.
@@ -35,11 +37,16 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("rotation", rotationSupplier.getAsDouble());
-    SmartDashboard.putNumber("speed", speedSupplier.getAsDouble());
-    double speedMulti = 1.0;
+    //SmartDashboard.putNumber("rotation", rotationSupplier.getAsDouble());
+    //SmartDashboard.putNumber("speed", speedSupplier.getAsDouble());
+
+    // The slow button has been changed to a fast button
+    double speedMulti = .66;
     if(slow.getAsBoolean()) {
-      speedMulti=.6;
+      speedMulti=1.0;
+    }
+    if(reverse.getAsBoolean()) {
+      speedMulti = speedMulti * -1.0;
     }
     drivetrain.arcadeDrive(speedSupplier.getAsDouble()*speedMulti, rotationSupplier.getAsDouble()*speedMulti);
   }

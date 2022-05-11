@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -40,6 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     backMotor.setNeutralMode(NeutralMode.Brake);
     frontMotor.setNeutralMode(NeutralMode.Brake);
+    //backMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, periodMs, timeoutMs)
 
     // PLACEHOLDER VALUES FIX THIS BEFORE COMPETITION!!!
     frontIntake.set(DoubleSolenoid.Value.kReverse);
